@@ -1,0 +1,64 @@
+-- Sample data for demonstration (optional)
+-- This script can be used to add sample restaurants and menu items for testing
+
+-- Note: This is just an example. In production, users will create their own restaurants
+-- through the application interface.
+
+-- Sample restaurant (you can modify the owner_id to match a real user)
+-- INSERT INTO public.restaurants (owner_id, name, description, address, phone, email, website, slug, is_active)
+-- VALUES (
+--   'your-user-id-here',
+--   'Gasthaus zur Post',
+--   'Traditional Austrian cuisine in the heart of Vienna. Family-owned restaurant serving authentic dishes since 1892.',
+--   'Hauptstraße 123, 1010 Wien, Austria',
+--   '+43 1 234 5678',
+--   'info@gasthaus-zur-post.at',
+--   'https://www.gasthaus-zur-post.at',
+--   'gasthaus-zur-post',
+--   true
+-- );
+
+-- Sample menu categories
+-- INSERT INTO public.menu_categories (restaurant_id, name, description, display_order, is_active)
+-- SELECT 
+--   r.id,
+--   category.name,
+--   category.description,
+--   category.display_order,
+--   true
+-- FROM public.restaurants r,
+-- (VALUES 
+--   ('Vorspeisen', 'Traditional Austrian appetizers', 1),
+--   ('Hauptspeisen', 'Hearty main courses', 2),
+--   ('Nachspeisen', 'Sweet desserts', 3),
+--   ('Getränke', 'Beverages and drinks', 4)
+-- ) AS category(name, description, display_order)
+-- WHERE r.slug = 'gasthaus-zur-post';
+
+-- Sample menu items
+-- INSERT INTO public.menu_items (restaurant_id, category_id, name, description, price, is_vegetarian, is_vegan, is_gluten_free, is_available, display_order)
+-- SELECT 
+--   r.id,
+--   c.id,
+--   item.name,
+--   item.description,
+--   item.price,
+--   item.is_vegetarian,
+--   item.is_vegan,
+--   item.is_gluten_free,
+--   true,
+--   item.display_order
+-- FROM public.restaurants r
+-- JOIN public.menu_categories c ON c.restaurant_id = r.id,
+-- (VALUES 
+--   ('Vorspeisen', 'Wiener Leberknödelsuppe', 'Traditional liver dumpling soup', 8.50, false, false, false, 1),
+--   ('Vorspeisen', 'Kürbiskernöl Salat', 'Mixed greens with pumpkin seed oil', 7.90, true, true, true, 2),
+--   ('Hauptspeisen', 'Wiener Schnitzel', 'Classic breaded veal cutlet with potato salad', 24.90, false, false, false, 1),
+--   ('Hauptspeisen', 'Tafelspitz', 'Boiled beef with horseradish and vegetables', 22.50, false, false, true, 2),
+--   ('Hauptspeisen', 'Käsespätzle', 'Austrian cheese noodles with crispy onions', 16.90, true, false, false, 3),
+--   ('Nachspeisen', 'Apfelstrudel', 'Traditional apple strudel with vanilla sauce', 8.90, true, false, false, 1),
+--   ('Nachspeisen', 'Sachertorte', 'Famous chocolate cake with apricot jam', 9.50, true, false, false, 2),
+--   ('Getränke', 'Ottakringer Bier', 'Local Vienna beer (0.5L)', 4.20, true, true, true, 1),
+--   ('Getränke', 'Grüner Veltliner', 'Austrian white wine (0.25L)', 6.80, true, true, true, 2)
+-- ) AS item(category_name, name, description, price, is_vegetarian, is_vegan, is_gluten_free, display_order)
+-- WHERE r.slug = 'gasthaus-zur-post' AND c.name = item.category_name;
